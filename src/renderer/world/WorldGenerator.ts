@@ -1,8 +1,19 @@
 import { BiomeType } from './Biome';
-import { ResourceNode } from '../../shared/types/Resources';
+import { ResourceNode as ResourceNodeType } from '../../shared/types/Resources';
 
-// Simplex/Perlin noise import (assume lightweight lib present)
-import SimplexNoise from 'simplex-noise';
+/**
+ * Simplified noise generator (deterministic)
+ * In production, use simplex-noise or perlin-noise package
+ */
+class SimplexNoise {
+  constructor(private seed: string) {}
+  
+  noise2D(x: number, y: number): number {
+    // Simple pseudo-random noise based on coordinates
+    const hash = (x * 374761393 + y * 668265263) >>> 0;
+    return (((hash * 2654435761) >>> 0) / 4294967296) * 2 - 1;
+  }
+}
 
 export class WorldGenerator {
   private width: number;
@@ -10,7 +21,7 @@ export class WorldGenerator {
   private simplex: SimplexNoise;
 
   public biomeMap: BiomeType[][];
-  public resourceNodes: ResourceNode[] = [];
+  public resourceNodes: ResourceNodeType[] = [];
 
   constructor(width: number, height: number) {
     this.width = width;
@@ -43,9 +54,11 @@ export class WorldGenerator {
   spawnResources(): void {
     for (let x = 0; x < this.width; x += 40) {
       for (let y = 0; y < this.height; y += 40) {
-        const biome = this.biomeMap[x][y];
-        const center = { x: x + 20, y: y + 20 };
+        const biome = this.biomeMap[x]?.[y];
         if (!biome) continue;
+        
+        const center = { x: x + 20, y: y + 20 };
+        
         // Forest: trees, rocks
         if (biome === 'forest') {
           this.resourceNodes.push({
@@ -68,7 +81,7 @@ export class WorldGenerator {
               isGathered: false,
             });
         } else if (biome === 'plains') {
-          if (Math.random() < 0.2)
+          if (Math.random() < 0.6)
             this.resourceNodes.push({
               id: `${biome}-bush-${x}-${y}`,
               type: 'food',
@@ -79,15 +92,16 @@ export class WorldGenerator {
               isGathered: false,
             });
         } else if (biome === 'desert') {
-          this.resourceNodes.push({
-            id: `${biome}-cactus-${x}-${y}`,
-            type: 'mineral',
-            position: center,
-            biome,
-            hitsRequired: 10,
-            currentHits: 0,
-            isGathered: false,
-          });
+          if (Math.random() < 0.3)
+            this.resourceNodes.push({
+              id: `${biome}-cactus-${x}-${y}`,
+              type: 'mineral',
+              position: center,
+              biome,
+              hitsRequired: 10,
+              currentHits: 0,
+              isGathered: false,
+            });
         } else if (biome === 'snow') {
           this.resourceNodes.push({
             id: `${biome}-pine-${x}-${y}`,
@@ -134,7 +148,7 @@ export class WorldGenerator {
   }
 
   // Helper to get resources at specified area for spatial hash lookup
-  getNearbyResources(x: number, y: number, radius: number): ResourceNode[] {
+  getNearbyResources(x: number, y: number, radius: number): ResourceNodeType[] {
     return this.resourceNodes.filter(node =>
       !node.isGathered &&
       Math.hypot(node.position.x - x, node.position.y - y) <= radius);

@@ -1,6 +1,6 @@
 import { ResourceNode } from '../entities/ResourceNode';
 import { Player } from '../entities/Player';
-import { Inventory } from '../../shared/types/Resources';
+import { Inventory, ResourceType } from '../../shared/types/Resources';
 
 /**
  * Handles interaction logic (E to gather)
@@ -13,7 +13,11 @@ export class InteractionSystem {
     active: false,
   };
 
-  constructor(private world: { getNearbyResources: Function }, private player: Player, private inventory: Inventory) {
+  constructor(
+    private world: { getNearbyResources: (x: number, y: number, radius: number) => ResourceNode[] },
+    private player: Player,
+    private inventory: Inventory
+  ) {
     this.setUpListeners();
   }
 
@@ -37,10 +41,13 @@ export class InteractionSystem {
     this.gathering.node = node;
     this.gathering.progress = 0;
     // Simulate gather animation (would animate in main loop)
-    node.hit();
-    if (node.isGathered) {
-      this.inventory.resources[node.type]++;
+    const wasGathered = node.hit();
+    if (wasGathered) {
+      // Type-safe resource increment
+      const resourceType: ResourceType = node.type;
+      this.inventory.resources[resourceType]++;
       this.gathering.active = false;
+      console.log(`Gathered ${resourceType}! Total: ${this.inventory.resources[resourceType]}`);
     }
   }
 

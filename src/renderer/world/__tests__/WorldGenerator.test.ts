@@ -1,5 +1,4 @@
-import { WorldGenerator } from '../world/WorldGenerator';
-import { BiomeType } from '../world/Biome';
+import { WorldGenerator } from '../WorldGenerator';
 
 describe('WorldGenerator', () => {
   it('generates biome map with correct dimensions', () => {
@@ -10,8 +9,8 @@ describe('WorldGenerator', () => {
 
   it('spawns resource nodes distributed across biomes', () => {
     const w = new WorldGenerator(800, 800);
-    let forestCount = w.resourceNodes.filter(n => n.biome === 'forest').length;
-    let desertCount = w.resourceNodes.filter(n => n.biome === 'desert').length;
+    const forestCount = w.resourceNodes.filter((n: any) => n.biome === 'forest').length;
+    const desertCount = w.resourceNodes.filter((n: any) => n.biome === 'desert').length;
     expect(forestCount).toBeGreaterThan(0);
     expect(desertCount).toBeGreaterThan(0);
   });
