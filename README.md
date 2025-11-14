@@ -14,20 +14,27 @@ This is a multi-phase development project creating a fully-featured survival gam
 
 ## 📋 Development Phases
 
-### ✅ Phase 1: Project Setup (Current)
+### ✅ Phase 1: Project Setup (Complete)
 - Electron + TypeScript foundation
 - Build system (Webpack)
 - Basic window launcher
 - Development environment
 
+### ✅ Phase 2: Core Game Loop (Complete)
+- Game engine with 60 FPS loop
+- Player entity with smooth movement
+- WASD + Arrow key controls
+- Camera system with smooth following
+- World rendering (2000x2000 map)
+- FPS counter and debug info
+
 ### 🔜 Future Phases
-- Phase 2: Core game loop and rendering
-- Phase 3: Player movement and controls
-- Phase 4: Resource gathering
-- Phase 5: Crafting system
+- Phase 3: Resource gathering
+- Phase 4: Crafting system
+- Phase 5: Building mechanics
 - Phase 6: Multiplayer networking
 - Phase 7: Combat mechanics
-- Phase 8: UI/HUD
+- Phase 8: UI/HUD improvements
 - Phase 9: Polish and optimization
 
 ## 🚀 Getting Started
@@ -46,10 +53,13 @@ git clone https://github.com/Fizzolas/survival-io-game.git
 # Navigate to project directory
 cd survival-io-game
 
+# Checkout Phase 2 branch
+git checkout feature/core-game-loop
+
 # Install dependencies
 npm install
 
-# Start the development build
+# Start the game
 npm start
 ```
 
@@ -69,17 +79,25 @@ survival-io-game/
 │   ├── main/          # Electron main process
 │   │   └── main.ts    # App entry point
 │   ├── renderer/      # Game client code
-│   │   ├── index.html # Main HTML file
-│   │   └── renderer.ts # Canvas rendering
+│   │   ├── engine/
+│   │   │   └── GameEngine.ts      # Core game loop
+│   │   ├── entities/
+│   │   │   └── Player.ts          # Player logic
+│   │   ├── systems/
+│   │   │   ├── Camera.ts          # Viewport management
+│   │   │   ├── InputManager.ts   # Keyboard input
+│   │   │   └── Renderer.ts        # Canvas drawing
+│   │   ├── index.html # Main HTML
+│   │   └── renderer.ts # Game initialization
 │   ├── server/        # Game server (future)
 │   └── shared/        # Shared types/constants
 │       ├── constants.ts
 │       └── types.ts
 ├── assets/            # Game assets (future)
 ├── dist/              # Build output
-├── package.json       # Dependencies
-├── tsconfig.json      # TypeScript config
-├── webpack.config.js  # Build configuration
+├── package.json
+├── tsconfig.json
+├── webpack.config.js
 └── README.md
 ```
 
@@ -89,24 +107,84 @@ survival-io-game/
 - **TypeScript**: Type-safe development
 - **Webpack**: Module bundling
 - **HTML5 Canvas**: 2D rendering
+- **Jest**: Unit testing
 - **WebSocket**: Real-time networking (future)
 - **Node.js**: Server hosting (future)
 
-## 📊 Phase 1 Status
+## 🎮 Phase 2 Features
+
+### Game Engine
+- **60 FPS game loop** with delta time
+- **requestAnimationFrame** for smooth rendering
+- **FPS counter** for performance monitoring
+- **Modular architecture** (Engine, Entities, Systems)
+
+### Player Movement
+- **WASD + Arrow keys** for 8-directional movement
+- **Smooth acceleration** and friction
+- **Speed normalization** for diagonal movement
+- **Max speed cap** at 200 units/second
+- **Direction indicator** showing movement
+
+### Camera System
+- **Smooth camera following** with lerp
+- **World boundary clamping**
+- **Screen/world coordinate conversion**
+- **Viewport culling** support
+
+### World Rendering
+- **2000x2000 unit map**
+- **Grass texture** with checkered pattern
+- **Grid overlay** (100 unit spacing)
+- **World border** visualization
+
+### Debug HUD
+- **FPS counter**
+- **Player position** (X, Y)
+- **Player speed** (units/second)
+- **Control hints**
+
+## 📊 Phase 2 Status
 
 **Completed:**
-- ✅ Repository initialization
-- ✅ TypeScript configuration
-- ✅ Webpack build system
-- ✅ Electron window launcher
-- ✅ Canvas rendering setup
-- ✅ Hello World display
-- ✅ Development scripts
+- ✅ GameEngine class with game loop
+- ✅ Player entity with movement
+- ✅ Camera system with following
+- ✅ InputManager for keyboard
+- ✅ Renderer for canvas drawing
+- ✅ World map rendering
+- ✅ Unit tests for core systems
+
+**Testing Results:**
+- ✅ Window launches successfully
+- ✅ Player moves smoothly with WASD
+- ✅ Camera follows player correctly
+- ✅ FPS maintains 60 consistently
+- ✅ No console errors
 
 **Next Steps:**
-- Core game loop implementation
-- Player entity system
-- Input handling
+- Add resource nodes (trees, rocks)
+- Implement gathering mechanics
+- Create inventory system
+
+## 🎯 Controls
+
+- **W / ↑** - Move up
+- **A / ←** - Move left
+- **S / ↓** - Move down
+- **D / →** - Move right
+
+## 🧪 Testing
+
+Run unit tests:
+```bash
+npm test
+```
+
+Run tests in watch mode:
+```bash
+npm test -- --watch
+```
 
 ## 📄 License
 
@@ -118,5 +196,6 @@ Fizzolas - [GitHub](https://github.com/Fizzolas)
 
 ---
 
-**Current Phase:** 1 - Project Setup  
-**Status:** ✅ Complete and runnable
+**Current Phase:** 2 - Core Game Loop & Rendering  
+**Status:** ✅ Complete and runnable  
+**Branch:** `feature/core-game-loop`
