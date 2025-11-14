@@ -8,17 +8,17 @@ import { InventoryUI } from './ui/InventoryUI';
 import { Inventory } from '../shared/types/Resources';
 
 console.log('=== Survival IO Game - Phase 3 ===');
-let gameEngine: any = null;
+
 let worldGen: WorldGenerator | null = null;
 let player: Player | null = null;
 let camera: Camera | null = null;
 let renderer: Renderer | null = null;
 let inputManager: InputManager | null = null;
-let interactionSystem: InteractionSystem | null = null;
 let inventory: Inventory = {
   resources: { wood: 0, stone: 0, food: 0, mineral: 0 },
 };
 let inventoryUI: InventoryUI | null = null;
+let interactionSystem: InteractionSystem | null = null;
 
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('gameCanvas') as HTMLCanvasElement;
@@ -38,7 +38,6 @@ window.addEventListener('DOMContentLoaded', () => {
   renderer = new Renderer(canvas.getContext('2d')!, camera);
   inventoryUI = new InventoryUI(inventory);
   interactionSystem = new InteractionSystem(worldGen, player, inventory);
-
   function gameLoop() {
     // Input / state update
     const input = inputManager!.getInputState();
