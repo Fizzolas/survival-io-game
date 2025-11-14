@@ -25,8 +25,6 @@ export class GameEngine {
   // World configuration
   private readonly WORLD_WIDTH = 2000;
   private readonly WORLD_HEIGHT = 2000;
-  private readonly TARGET_FPS = 60;
-  private readonly FIXED_TIME_STEP = 1000 / 60; // 16.67ms per frame
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;

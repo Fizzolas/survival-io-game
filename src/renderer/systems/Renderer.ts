@@ -1,6 +1,6 @@
 import { Player } from '../entities/Player';
 import { Camera } from './Camera';
-import { Vector2 } from '../../shared/types';
+// import { Vector2 } from '../../shared/types';
 
 /**
  * Rendering system
