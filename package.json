@@ -1,6 +1,6 @@
 {
   "name": "survival-io-game",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "description": "Desktop survival IO game inspired by MooMoo.io",
   "main": "dist/main/main.js",
   "scripts": {
@@ -22,7 +22,6 @@
   "devDependencies": {
     "@types/node": "^20.10.0",
     "@types/jest": "^29.5.11",
-    "copy-webpack-plugin": "^11.0.0",
     "electron": "^28.0.0",
     "jest": "^29.7.0",
     "rimraf": "^5.0.5",
@@ -33,6 +32,7 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
-    "ws": "^8.16.0"
+    "ws": "^8.16.0",
+    "simplex-noise": "^4.0.1"
   }
 }
