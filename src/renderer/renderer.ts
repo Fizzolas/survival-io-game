@@ -8,12 +8,15 @@ console.log('Survival IO Game - Renderer initialized');
 // Wait for DOM to be ready
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('gameCanvas') as HTMLCanvasElement;
-  const ctx = canvas.getContext('2d');
+  const ctxNullable = canvas.getContext('2d');
 
-  if (!ctx) {
+  if (!ctxNullable) {
     console.error('Failed to get canvas context');
     return;
   }
+
+  // Now we know ctx is not null
+  const ctx: CanvasRenderingContext2D = ctxNullable;
 
   // Set canvas size
   function resizeCanvas(): void {
