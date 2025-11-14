@@ -1,0 +1,37 @@
+{
+  "name": "survival-io-game",
+  "version": "0.1.0",
+  "description": "Desktop survival IO game inspired by MooMoo.io",
+  "main": "dist/main/main.js",
+  "scripts": {
+    "start": "npm run build && electron .",
+    "dev": "webpack --mode development --watch & electron .",
+    "build": "webpack --mode production",
+    "test": "jest",
+    "clean": "rimraf dist"
+  },
+  "keywords": [
+    "game",
+    "io-game",
+    "electron",
+    "multiplayer",
+    "survival"
+  ],
+  "author": "Fizzolas",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/jest": "^29.5.11",
+    "electron": "^28.0.0",
+    "jest": "^29.7.0",
+    "rimraf": "^5.0.5",
+    "ts-jest": "^29.1.1",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.3.3",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "ws": "^8.16.0"
+  }
+}
