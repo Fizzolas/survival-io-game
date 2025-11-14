@@ -25,31 +25,31 @@ window.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('resize', resizeCanvas);
 
   // Render Hello World
-  function render(context: CanvasRenderingContext2D): void {
+  function render(): void {
     // Clear canvas
-    context.fillStyle = '#1a252f';
-    context.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#1a252f';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Draw title
-    context.fillStyle = '#32b8c6';
-    context.font = 'bold 72px Arial';
-    context.textAlign = 'center';
-    context.textBaseline = 'middle';
-    context.fillText('Hello World', canvas.width / 2, canvas.height / 2 - 50);
+    ctx.fillStyle = '#32b8c6';
+    ctx.font = 'bold 72px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('Hello World', canvas.width / 2, canvas.height / 2 - 50);
 
     // Draw subtitle
-    context.fillStyle = '#a7a9a9';
-    context.font = '24px Arial';
-    context.fillText('Survival IO Game - Phase 1', canvas.width / 2, canvas.height / 2 + 20);
+    ctx.fillStyle = '#a7a9a9';
+    ctx.font = '24px Arial';
+    ctx.fillText('Survival IO Game - Phase 1', canvas.width / 2, canvas.height / 2 + 20);
 
-    context.fillStyle = '#77787c';
-    context.font = '18px Arial';
-    context.fillText('Electron + TypeScript + Canvas', canvas.width / 2, canvas.height / 2 + 60);
+    ctx.fillStyle = '#77787c';
+    ctx.font = '18px Arial';
+    ctx.fillText('Electron + TypeScript + Canvas', canvas.width / 2, canvas.height / 2 + 60);
   }
 
   // Animation loop
   function gameLoop(): void {
-    render(ctx);
+    render();
     requestAnimationFrame(gameLoop);
   }
 
