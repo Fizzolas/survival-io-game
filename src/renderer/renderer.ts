@@ -1,60 +1,63 @@
+import { GameEngine } from './engine/GameEngine';
+
 /**
  * Renderer process entry point
- * Handles game client logic and canvas rendering
+ * Initializes and starts the game engine
  */
 
-console.log('Survival IO Game - Renderer initialized');
+console.log('=== Survival IO Game - Phase 2 ===');
+console.log('Initializing game engine...');
+
+let gameEngine: GameEngine | null = null;
 
 // Wait for DOM to be ready
 window.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM loaded, setting up canvas...');
+  
   const canvas = document.getElementById('gameCanvas') as HTMLCanvasElement;
-  const ctxNullable = canvas.getContext('2d');
-
-  if (!ctxNullable) {
-    console.error('Failed to get canvas context');
+  
+  if (!canvas) {
+    console.error('Canvas element not found!');
     return;
   }
 
-  // Now we know ctx is not null
-  const ctx: CanvasRenderingContext2D = ctxNullable;
-
-  // Set canvas size
+  // Set canvas size to window size
   function resizeCanvas(): void {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    
+    // Update game engine if it exists
+    if (gameEngine) {
+      gameEngine.resize(canvas.width, canvas.height);
+    }
   }
 
+  // Initial resize
   resizeCanvas();
-  window.addEventListener('resize', resizeCanvas);
 
-  // Render Hello World
-  function render(): void {
-    // Clear canvas
-    ctx.fillStyle = '#1a252f';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  // Handle window resize
+  window.addEventListener('resize', () => {
+    resizeCanvas();
+  });
 
-    // Draw title
-    ctx.fillStyle = '#32b8c6';
-    ctx.font = 'bold 72px Arial';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('Hello World', canvas.width / 2, canvas.height / 2 - 50);
-
-    // Draw subtitle
-    ctx.fillStyle = '#a7a9a9';
-    ctx.font = '24px Arial';
-    ctx.fillText('Survival IO Game - Phase 1', canvas.width / 2, canvas.height / 2 + 20);
-
-    ctx.fillStyle = '#77787c';
-    ctx.font = '18px Arial';
-    ctx.fillText('Electron + TypeScript + Canvas', canvas.width / 2, canvas.height / 2 + 60);
+  // Initialize game engine
+  try {
+    gameEngine = new GameEngine(canvas);
+    console.log('Game engine created successfully');
+    
+    // Start the game loop
+    gameEngine.start();
+    console.log('Game loop started');
+    
+  } catch (error) {
+    console.error('Failed to initialize game engine:', error);
   }
+});
 
-  // Animation loop
-  function gameLoop(): void {
-    render();
-    requestAnimationFrame(gameLoop);
+// Handle cleanup on unload
+window.addEventListener('beforeunload', () => {
+  if (gameEngine) {
+    gameEngine.stop();
+    console.log('Game engine stopped');
   }
-
-  gameLoop();
 });
