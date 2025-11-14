@@ -1,4 +1,5 @@
 const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const mainConfig = {
   target: 'electron-main',
@@ -46,6 +47,16 @@ const rendererConfig = {
       },
     ],
   },
+  plugins: [
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, 'src/renderer/index.html'),
+          to: path.resolve(__dirname, 'dist/renderer/index.html'),
+        },
+      ],
+    }),
+  ],
 };
 
 module.exports = [mainConfig, rendererConfig];
