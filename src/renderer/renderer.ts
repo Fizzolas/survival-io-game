@@ -36,19 +36,16 @@ window.addEventListener('DOMContentLoaded', () => {
   inputManager = new InputManager();
   renderer = new Renderer(canvas.getContext('2d')!, camera);
   inventoryUI = new InventoryUI(inventory);
-  // interactionSystem = new InteractionSystem(worldGen, player, inventory); // Intentionally not referenced
+  // interactionSystem = new InteractionSystem(worldGen, player, inventory);
   function gameLoop() {
     // Input / state update
     const input = inputManager!.getInputState();
     player!.update(1 / 60, input);
     camera!.update();
-    // Render world/biomes/resources
     renderer!.clear();
     renderer!.drawWorld(2000, 2000);
-    // Draw resource nodes
-    worldGen!.resourceNodes.forEach((node) => {
+    worldGen!.resourceNodes.forEach((node: any) => {
       if (node.isGathered) return;
-      // Node shape by type
       let color = '#654321';
       let r = 18;
       if (node.type === 'wood') {
@@ -69,9 +66,7 @@ window.addEventListener('DOMContentLoaded', () => {
       renderer!.ctx.fill();
       renderer!.ctx.restore();
     });
-    // Draw player
     renderer!.drawPlayer(player!);
-    // UI: FPS (placeholder), debug, inventory
     renderer!.drawUI(60, player!);
     inventoryUI!.draw(renderer!.ctx);
     requestAnimationFrame(gameLoop);
