@@ -1,23 +1,81 @@
-// Patch Renderer to give resources distinct colors/textures based on biome
-import { getBiomeColor } from './world/BiomeColors';
-// ...
-worldGen!.resourceNodes.forEach((node) => {
-  if (node.isGathered) return;
-  let color = '#654321';
-  let r = 18;
-  // Override by resource/biome type
-  if (node.type === 'wood') {
-    color = (node.biome === 'snow') ? '#c2dddf' : (node.biome === 'swamp' ? '#7d6942' : '#5d813b');
-    r = node.biome === 'swamp' ? 19 : 23;
-  } else if (node.type === 'stone') {
-    color = node.biome === 'snow' ? '#eaf7fa' : '#a7a9a9';
-    r = 18;
-  } else if (node.type === 'food') {
-    color = node.biome === 'plains' ? '#e6a161' : '#bede72';
-    r = 14;
-  } else if (node.type === 'mineral') {
-    color = node.biome === 'desert' ? '#f4d06c' : (node.biome === 'swamp' ? '#617073' : '#32b8c6');
-    r = 19;
+import { WorldGenerator } from './world/WorldGenerator';
+import { Player } from './entities/Player';
+import { Camera } from './systems/Camera';
+import { Renderer } from './systems/Renderer';
+import { InputManager } from './systems/InputManager';
+import { InteractionSystem } from './systems/InteractionSystem';
+import { InventoryUI } from './ui/InventoryUI';
+import { Inventory } from '../shared/types/Resources';
+
+console.log('=== Survival IO Game - Phase 3 ===');
+let gameEngine: any = null;
+let player: Player | null = null;
+let camera: Camera | null = null;
+let renderer: Renderer | null = null;
+let inputManager: InputManager | null = null;
+let interactionSystem: InteractionSystem | null = null;
+let inventory: Inventory = {
+  resources: { wood: 0, stone: 0, food: 0, mineral: 0 },
+};
+let inventoryUI: InventoryUI | null = null;
+let worldGen: WorldGenerator | null = null;
+
+window.addEventListener('DOMContentLoaded', () => {
+  const canvas = document.getElementById('gameCanvas') as HTMLCanvasElement;
+  if (!canvas) return;
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    if (camera) camera.resize(canvas.width, canvas.height);
   }
-  // ...rest drawing code...
+  resizeCanvas();
+  worldGen = new WorldGenerator(2000, 2000);
+  player = new Player(1000, 1000);
+  camera = new Camera(canvas.width, canvas.height, 2000, 2000);
+  camera.setTarget(player);
+  inputManager = new InputManager();
+  renderer = new Renderer(canvas.getContext('2d')!, camera);
+  inventoryUI = new InventoryUI(inventory);
+  interactionSystem = new InteractionSystem(worldGen, player, inventory);
+
+  function gameLoop() {
+    // Biome backgrounds
+    worldGen!.drawBiomeMap(renderer!.ctx, camera!);
+    // Input / state update
+    const input = inputManager!.getInputState();
+    player!.update(1 / 60, input);
+    camera!.update();
+    // Draw resource nodes
+    worldGen!.resourceNodes.forEach((node) => {
+      if (node.isGathered) return;
+      let color = '#654321';
+      let r = 18;
+      if (node.type === 'wood') {
+        color = (node.biome === 'snow') ? '#c2dddf' : (node.biome === 'swamp' ? '#7d6942' : '#5d813b');
+        r = node.biome === 'swamp' ? 19 : 23;
+      } else if (node.type === 'stone') {
+        color = node.biome === 'snow' ? '#eaf7fa' : '#a7a9a9';
+        r = 18;
+      } else if (node.type === 'food') {
+        color = node.biome === 'plains' ? '#e6a161' : '#bede72';
+        r = 14;
+      } else if (node.type === 'mineral') {
+        color = node.biome === 'desert' ? '#f4d06c' : (node.biome === 'swamp' ? '#617073' : '#32b8c6');
+        r = 19;
+      }
+      let pos = camera!.worldToScreen(node.position);
+      renderer!.ctx.save();
+      renderer!.ctx.beginPath();
+      renderer!.ctx.arc(pos.x, pos.y, r, 0, Math.PI * 2);
+      renderer!.ctx.fillStyle = color;
+      renderer!.ctx.globalAlpha = 0.95;
+      renderer!.ctx.fill();
+      renderer!.ctx.restore();
+    });
+    renderer!.drawPlayer(player!);
+    renderer!.drawUI(60, player!);
+    inventoryUI!.draw(renderer!.ctx);
+    requestAnimationFrame(gameLoop);
+  }
+  gameLoop();
 });
