@@ -26,7 +26,6 @@ window.addEventListener('DOMContentLoaded', () => {
     console.error('Canvas not found!');
     return;
   }
-
   const ctx = canvas.getContext('2d');
   if (!ctx) {
     console.error('Could not get canvas context!');
@@ -38,11 +37,9 @@ window.addEventListener('DOMContentLoaded', () => {
     canvas.height = window.innerHeight;
     if (camera) camera.resize(canvas.width, canvas.height);
   }
-  
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
 
-  // Initialize world and systems
   worldGen = new WorldGenerator(2000, 2000);
   player = new Player(1000, 1000);
   camera = new Camera(canvas.width, canvas.height, 2000, 2000);
@@ -56,42 +53,21 @@ window.addEventListener('DOMContentLoaded', () => {
     inventory
   );
 
-  console.log('Game initialized successfully');
-  console.log('Controls: WASD to move, E to gather');
-
   function gameLoop() {
     // Update
     const input = inputManager!.getInputState();
     player!.update(1 / 60, input);
     camera!.update();
-
-    // Clear
     renderer!.clear();
-
-    // Draw biome backgrounds
     drawBiomes(ctx, camera!, worldGen!);
-
-    // Draw world grid
     renderer!.drawWorld(2000, 2000);
-
-    // Draw resource nodes
     drawResources(ctx, camera!, worldGen!, player!, interactionSystem!);
-
-    // Draw player
     renderer!.drawPlayer(player!);
-
-    // Draw UI
     renderer!.drawUI(60, player!);
-    
-    // Draw inventory (top-right)
     inventoryUI!.draw(ctx, canvas.width);
-
-    // Draw current biome info
     drawBiomeInfo(ctx, player!, worldGen!);
-
     requestAnimationFrame(gameLoop);
   }
-
   gameLoop();
 });
 
