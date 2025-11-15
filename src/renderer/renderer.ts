@@ -25,6 +25,7 @@ window.addEventListener('DOMContentLoaded', () => {
     console.error('Canvas not found!');
     return;
   }
+  // Use non-null assertion (!) to fully suppress TS18047 errors on ctx
   const ctx = canvas.getContext('2d')!;
   function resizeCanvas() {
     canvas.width = window.innerWidth;
