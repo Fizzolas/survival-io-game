@@ -3,7 +3,6 @@ import { Player } from './entities/Player';
 import { Camera } from './systems/Camera';
 import { Renderer } from './systems/Renderer';
 import { InputManager } from './systems/InputManager';
-import { InteractionSystem } from './systems/InteractionSystem';
 import { InventoryUI } from './ui/InventoryUI';
 import { Inventory } from '../shared/types/Resources';
 
@@ -18,7 +17,7 @@ let inventory: Inventory = {
   resources: { wood: 0, stone: 0, food: 0, mineral: 0 },
 };
 let inventoryUI: InventoryUI | null = null;
-let interactionSystem: InteractionSystem | null = null;
+// let interactionSystem: InteractionSystem | null = null;
 
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('gameCanvas') as HTMLCanvasElement;
@@ -37,7 +36,7 @@ window.addEventListener('DOMContentLoaded', () => {
   inputManager = new InputManager();
   renderer = new Renderer(canvas.getContext('2d')!, camera);
   inventoryUI = new InventoryUI(inventory);
-  interactionSystem = new InteractionSystem(worldGen, player, inventory);
+  // interactionSystem = new InteractionSystem(worldGen, player, inventory); // Intentionally not referenced
   function gameLoop() {
     // Input / state update
     const input = inputManager!.getInputState();
