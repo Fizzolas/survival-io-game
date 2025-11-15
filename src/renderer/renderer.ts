@@ -6,7 +6,6 @@ import { InputManager } from './systems/InputManager';
 import { InteractionSystem } from './systems/InteractionSystem';
 import { InventoryUI } from './ui/InventoryUI';
 import { Inventory } from '../shared/types/Resources';
-import { BiomeType } from './world/Biome';
 
 console.log('=== Survival IO Game - Phase 3 (Fixed) ===');
 
@@ -85,7 +84,7 @@ window.addEventListener('DOMContentLoaded', () => {
     renderer!.drawUI(60, player!);
     
     // Draw inventory (top-right)
-    inventoryUI!.draw(ctx, canvas.width, canvas.height);
+    inventoryUI!.draw(ctx, canvas.width);
 
     // Draw current biome info
     drawBiomeInfo(ctx, player!, worldGen!);
@@ -96,9 +95,6 @@ window.addEventListener('DOMContentLoaded', () => {
   gameLoop();
 });
 
-/**
- * Draw biome background colors
- */
 function drawBiomes(
   ctx: CanvasRenderingContext2D,
   camera: Camera,
@@ -106,24 +102,18 @@ function drawBiomes(
 ): void {
   ctx.save();
   ctx.translate(-camera.position.x, -camera.position.y);
-
   const cellSize = 100;
   for (let x = 0; x < 2000; x += cellSize) {
     for (let y = 0; y < 2000; y += cellSize) {
       const biome = worldGen.getBiomeAt(x, y);
       if (!biome) continue;
-
       ctx.fillStyle = worldGen.getBiomeColor(biome);
       ctx.fillRect(x, y, cellSize, cellSize);
     }
   }
-
   ctx.restore();
 }
 
-/**
- * Draw resource nodes with info
- */
 function drawResources(
   ctx: CanvasRenderingContext2D,
   camera: Camera,
@@ -132,78 +122,36 @@ function drawResources(
   interactionSystem: InteractionSystem
 ): void {
   const nearestResource = interactionSystem.getNearestResource();
-
   worldGen.resourceNodes.forEach((node) => {
     if (node.isGathered) return;
-
     const screenPos = camera.worldToScreen(node.position);
     const isNearest = nearestResource?.id === node.id;
-
-    // Resource color and size
     let color = '#654321';
     let radius = 15;
     let label = '';
-
-    if (node.type === 'wood') {
-      color = '#5d813b';
-      radius = 18;
-      label = 'Tree';
-    } else if (node.type === 'stone') {
-      color = '#a7a9a9';
-      radius = 16;
-      label = 'Rock';
-    } else if (node.type === 'food') {
-      color = '#e6a161';
-      radius = 12;
-      label = 'Bush';
-    } else if (node.type === 'mineral') {
-      color = '#32b8c6';
-      radius = 14;
-      label = 'Mineral';
-    }
-
+    if (node.type === 'wood') { color = '#5d813b'; radius = 18; label = 'Tree';}
+    else if (node.type === 'stone') { color = '#a7a9a9'; radius = 16; label = 'Rock';}
+    else if (node.type === 'food') { color = '#e6a161'; radius = 12; label = 'Bush';}
+    else if (node.type === 'mineral') { color = '#32b8c6'; radius = 14; label = 'Mineral';}
     ctx.save();
-
-    // Highlight if nearest
     if (isNearest) {
-      ctx.strokeStyle = '#ffff00';
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.arc(screenPos.x, screenPos.y, radius + 5, 0, Math.PI * 2);
+      ctx.strokeStyle = '#ffff00'; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.arc(screenPos.x, screenPos.y, radius + 5, 0, Math.PI * 2);
       ctx.stroke();
     }
-
-    // Draw resource
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    ctx.arc(screenPos.x, screenPos.y, radius, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Border
-    ctx.strokeStyle = '#000000';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-    // Show info if nearest
+    ctx.fillStyle = color; ctx.beginPath(); ctx.arc(screenPos.x, screenPos.y, radius, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = '#000000'; ctx.lineWidth = 2; ctx.stroke();
     if (isNearest) {
-      ctx.fillStyle = '#ffffff';
-      ctx.strokeStyle = '#000000';
-      ctx.lineWidth = 3;
-      ctx.font = 'bold 12px Arial';
-      ctx.textAlign = 'center';
-      
+      ctx.fillStyle = '#ffffff'; ctx.strokeStyle = '#000000'; ctx.lineWidth = 3;
+      ctx.font = 'bold 12px Arial'; ctx.textAlign = 'center';
       const text = `${label} [${node.hitsRequired - node.currentHits} hits] - Press E`;
       ctx.strokeText(text, screenPos.x, screenPos.y - radius - 10);
       ctx.fillText(text, screenPos.x, screenPos.y - radius - 10);
     }
-
     ctx.restore();
   });
 }
 
-/**
- * Draw current biome info
- */
 function drawBiomeInfo(
   ctx: CanvasRenderingContext2D,
   player: Player,
@@ -211,17 +159,11 @@ function drawBiomeInfo(
 ): void {
   const biome = worldGen.getBiomeAt(player.position.x, player.position.y);
   if (!biome) return;
-
   ctx.save();
-  ctx.fillStyle = '#ffffff';
-  ctx.strokeStyle = '#000000';
-  ctx.lineWidth = 3;
-  ctx.font = 'bold 16px Arial';
-  ctx.textAlign = 'left';
-
+  ctx.fillStyle = '#ffffff'; ctx.strokeStyle = '#000000'; ctx.lineWidth = 3;
+  ctx.font = 'bold 16px Arial'; ctx.textAlign = 'left';
   const text = `Biome: ${biome.charAt(0).toUpperCase() + biome.slice(1)}`;
   ctx.strokeText(text, 10, 120);
   ctx.fillText(text, 10, 120);
-
   ctx.restore();
 }
