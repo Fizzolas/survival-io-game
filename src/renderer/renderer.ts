@@ -10,7 +10,6 @@ import { Inventory } from '../shared/types/Resources';
 console.log('=== Survival IO Game - Phase 3 (Fixed) ===');
 
 let worldGen: WorldGenerator | null = null;
-let player: Player | null = null;
 let camera: Camera | null = null;
 let renderer: Renderer | null = null;
 let inputManager: InputManager | null = null;
@@ -36,7 +35,7 @@ window.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('resize', resizeCanvas);
 
   worldGen = new WorldGenerator(2000, 2000);
-  player = new Player(1000, 1000);
+  const player = new Player(1000, 1000);
   camera = new Camera(canvas.width, canvas.height, 2000, 2000);
   camera.setTarget(player);
   inputManager = new InputManager();
@@ -51,16 +50,16 @@ window.addEventListener('DOMContentLoaded', () => {
   function gameLoop() {
     // Update
     const input = inputManager!.getInputState();
-    player!.update(1 / 60, input);
+    player.update(1 / 60, input);
     camera!.update();
     renderer!.clear();
     drawBiomes(ctx, camera!, worldGen!);
     renderer!.drawWorld(2000, 2000);
-    drawResources(ctx, camera!, worldGen!, player!, interactionSystem!);
-    renderer!.drawPlayer(player!);
-    renderer!.drawUI(60, player!);
+    drawResources(ctx, camera!, worldGen!, player, interactionSystem!);
+    renderer!.drawPlayer(player);
+    renderer!.drawUI(60, player);
     inventoryUI!.draw(ctx, canvas.width);
-    drawBiomeInfo(ctx, player!, worldGen!);
+    drawBiomeInfo(ctx, player, worldGen!);
     requestAnimationFrame(gameLoop);
   }
   gameLoop();
