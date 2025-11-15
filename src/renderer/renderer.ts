@@ -26,12 +26,7 @@ window.addEventListener('DOMContentLoaded', () => {
     console.error('Canvas not found!');
     return;
   }
-  const ctx = canvas.getContext('2d');
-  if (!ctx) {
-    console.error('Could not get canvas context!');
-    return;
-  }
-
+  const ctx = canvas.getContext('2d')!;
   function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
